@@ -1,8 +1,8 @@
 {
-  "name": "botkit",
+  "name": "gsiuxd-uxbot-slack",
   "version": "0.5.1",
-  "description": "Building blocks for Building Bots",
-  "main": "lib/Botkit.js",
+  "description": "Greet new members",
+  "main": "index.js",
   "dependencies": {
     "async": "^2.0.0-rc.5",
     "back": "^1.0.1",
