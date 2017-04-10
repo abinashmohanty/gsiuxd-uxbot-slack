@@ -36,9 +36,7 @@
     "winston": "^2.1.1"
   },
   "scripts": {
-    "start": "node index.js",
-    "pretest": "jscs ./lib/",
-    "test": "mocha tests/*.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
