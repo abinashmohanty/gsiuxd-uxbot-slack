@@ -8,21 +8,33 @@
 // Uses the slack button feature to offer a real time bot to multiple teams 
 var Botkit = require('./lib/Botkit.js');
 
-if (!process.env.clientId || !process.env.clientSecret || !process.env.port) {
+if (!process.env.clientId || !process.env.clientSecret || !port) {
   console.log('Error: Specify clientId clientSecret and port in environment');
   process.exit(1);
 }
 
 
 // Botkit-based Redis store
-var Redis_Store = require('./lib/redis_storage.js');
-var redis_url = process.env.REDIS_URL ||"redis://127.0.0.1:6379"
-var redis_store = new Redis_Store({url: redis_url});
+var redis = require('./lib/redis_storage.js');
+var http = require('http');
+var url = require('url');
+var redisURL = url.parse(process.env.REDISCLOUD_URL);
+
+var redisStorage = redis({
+    namespace: 'uxbot-data',
+    host: redisURL.hostname,
+    port: redisURL.port,
+    auth_pass: redisURL.auth.split(":")[1]
+});
+
+var controller = Botkit.slackbot({
+    storage: redisStorage
+});
 
 
 var controller = Botkit.slackbot({
   // interactive_replies: true, // tells botkit to send button clicks into conversations
-  Redis_Store: './lib/redis_storage.js',
+  storage: redisStorage,
   // rtm_receive_messages: false, // disable rtm_receive_messages if you enable events api
 }).configureSlackApp(
   {
@@ -585,6 +597,11 @@ controller.storage.teams.all(function(err,teams) {
 
 });
 
+// To keep Heroku's free dyno awake
+http.createServer(function(request, response) {
+    response.writeHead(200, {'Content-Type': 'text/plain'});
+    response.end('Ok, dyno is awake.');
+}).listen(process.env.PORT || 5000);
 
 /* Slack Team Channel Archives  
 ============================================ */
