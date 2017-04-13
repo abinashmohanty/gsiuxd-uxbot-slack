@@ -37,6 +37,20 @@ if (token) {
   require('beepboop-botkit').start(controller, { debug: false })
 }
 
+// new
+var controller = Botkit.slackbot({
+  // interactive_replies: true, // tells botkit to send button clicks into conversations
+  json_file_store: './db_slackbutton_bot/',
+  // rtm_receive_messages: false, // disable rtm_receive_messages if you enable events api
+}).configureSlackApp(
+  {
+    clientId: process.env.clientId,
+    clientSecret: process.env.clientSecret,
+    scopes: ['bot'],
+  }
+);
+// new ends
+
 
 /* use the following in case of environment varibale for clientId and clicnet Secret
 if (!process.env.clientId || !process.env.clientSecret || !port) {
