@@ -14,9 +14,15 @@ if (!process.env.clientId || !process.env.clientSecret || !process.env.port) {
 }
 
 
+// Botkit-based Redis store
+var Redis_Store = require('./lib/redis_storage.js');
+var redis_url = process.env.REDIS_URL ||"redis://127.0.0.1:6379"
+var redis_store = new Redis_Store({url: redis_url});
+
+
 var controller = Botkit.slackbot({
   // interactive_replies: true, // tells botkit to send button clicks into conversations
-  json_file_store: './store_data/',
+  Redis_Store: './lib/redis_storage.js',
   // rtm_receive_messages: false, // disable rtm_receive_messages if you enable events api
 }).configureSlackApp(
   {

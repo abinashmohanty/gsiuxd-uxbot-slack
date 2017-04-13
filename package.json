@@ -20,7 +20,8 @@
   },
   "devDependencies": {
     "nodemon": "^1.11.0",
-    "standard": "^8.6.0"
+    "standard": "^8.6.0",
+    "redis": "*"
   },
   "repository": {
     "type": "git",
