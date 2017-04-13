@@ -34,7 +34,7 @@ if (token) {
 // Otherwise assume multi-team mode - setup beep boop resourcer connection
 } else {
   console.log('Starting in Beep Boop multi-team mode')
-  require('beepboop-botkit').start(controller, { debug: true })
+  require('beepboop-botkit').start(controller, { debug: false })
 }
 
 
