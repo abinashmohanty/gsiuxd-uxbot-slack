@@ -6,8 +6,10 @@
 
 
 /* Uses the slack button feature to offer a real time bot to multiple teams */
+'use strict'
+
 var Botkit = require('./lib/Botkit.js');
-var BeepBoop = require('beepboop-botkit') // support for beepboop
+var BeepBoop = require('./lib/beepboop-botkit') // support for beepboop
 var BotkitStorageBeepBoop = require('botkit-storage-beepboop') // beepboop storage
 
 var PORT = process.env.PORT || 8080 // beepboop's default to 8080 for local dev
