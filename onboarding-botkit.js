@@ -7,20 +7,26 @@
 
 /* Uses the slack button feature to offer a real time bot to multiple teams */
 var Botkit = require('./lib/Botkit.js');
-var BeepBoop = require('beepboop-botkit') // support for beepboop
-var BotkitStorageBeepBoop = require('botkit-storage-beepboop') // beepboop storage
 
-var PORT = process.env.PORT || 8080 // beepboop's default to 8080 for local dev
+if (!process.env.clientId || !process.env.clientSecret || !process.env.port) {
+  console.log('Error: Specify clientId clientSecret and port in environment');
+  process.exit(1);
+}
 
 
-var VERIFY_TOKEN = process.env.SLACK_VERIFY_TOKEN // multi-team verify token
+var controller = Botkit.slackbot({
+  // interactive_replies: true, // tells botkit to send button clicks into conversations
+  json_file_store: './store_data/',
+  // rtm_receive_messages: false, // disable rtm_receive_messages if you enable events api
+}).configureSlackApp(
+  {
+    clientId: process.env.clientId,
+    clientSecret: process.env.clientSecret,
+    scopes: ['bot'],
+  }
+);
 
-var controller = botkit.slackbot({
-  storage: BotkitStorageBeepBoop()
-})
-require('beepboop-botkit').start(controller, { debug: true })
 
-/*
 controller.setupWebserver(process.env.port,function(err,webserver) {
   controller.createWebhookEndpoints(controller.webserver);
 
@@ -32,7 +38,7 @@ controller.setupWebserver(process.env.port,function(err,webserver) {
     }
   });
 });
-*/
+
 
 // just a simple way to make sure we don't
 // connect to the RTM twice for the same team

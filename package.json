@@ -5,6 +5,7 @@
   "main": "onboarding.js",
   "dependencies": {
     "async": "^2.0.0-rc.5",
+    "botkit-storage-beepboop": "^1.0.0",  
     "back": "^1.0.1",
     "body-parser": "^1.14.2",
     "botbuilder": "^3.2.3",
