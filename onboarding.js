@@ -13,7 +13,6 @@ var Botkit = require('./lib/Botkit.js');
 var BeepBoopBotkit = require('./lib/beepboop-botkit'); // support for beepboop
 var BotkitStorageBeepBoop = require('botkit-storage-beepboop'); // beepboop storage
 
-var PORT = process.env.PORT || 8080 // beepboop's default to 8080 for local dev
 
 
 var token = process.env.SLACK_TOKEN // multi-team verify token
@@ -23,15 +22,26 @@ var controller = Botkit.slackbot({
 })
 require('beepboop-botkit').start(controller, { debug: true });
 
-// Connect to Slack RTM 
-controller.spawn({
-  token: token
-}).startRTM(function (err, bot, payload) {
-  if (err) {
-    throw new Error(err)
-  }
-  console.log('Connected to Slack RTM')
-});
+
+// Assume single team mode if we have a SLACK_TOKEN
+if (token) {
+  console.log('Starting in single-team mode')
+  controller.spawn({
+    token: token
+  }).startRTM(function (err, bot, payload) {
+    if (err) {
+      throw new Error(err)
+    }
+
+    console.log('Connected to Slack RTM')
+  })
+// Otherwise assume multi-team mode - setup beep boop resourcer connection
+} else {
+  console.log('Starting in Beep Boop multi-team mode')
+  require('beepboop-botkit').start(controller, { debug: true })
+}
+
+
 
 // just a simple way to make sure we don't
 // connect to the RTM twice for the same team
