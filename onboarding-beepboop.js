@@ -6,7 +6,7 @@
 
 
 /* Uses the slack button feature to offer a real time bot to multiple teams */
-
+'use strict'
 
 var Botkit = require('./lib/Botkit.js');
 //var BeepBoop = require('beepboop');
@@ -16,22 +16,26 @@ var BotkitStorageBeepBoop = require('botkit-storage-beepboop'); // beepboop stor
 var PORT = process.env.PORT || 8080 // beepboop's default to 8080 for local dev
 
 
-var token = process.env.SLACK_TOKEN // multi-team verify token
+var VERIFY_TOKEN = process.env.SLACK_VERIFY_TOKEN // multi-team verify token
 
 var controller = Botkit.slackbot({
   storage: BotkitStorageBeepBoop()
 })
 require('beepboop-botkit').start(controller, { debug: true });
 
-// Connect to Slack RTM 
-controller.spawn({
-  token: token
-}).startRTM(function (err, bot, payload) {
-  if (err) {
-    throw new Error(err)
-  }
-  console.log('Connected to Slack RTM')
+/*
+controller.setupWebserver(process.env.port,function(err,webserver) {
+  controller.createWebhookEndpoints(controller.webserver);
+
+  controller.createOauthEndpoints(controller.webserver,function(err,req,res) {
+    if (err) {
+      res.status(500).send('ERROR: ' + err);
+    } else {
+      res.send('Success!');
+    }
+  });
 });
+*/
 
 // just a simple way to make sure we don't
 // connect to the RTM twice for the same team
@@ -155,6 +159,41 @@ controller.hears(['hello there'], 'direct_message,direct_mention,mention', funct
     bot.reply(message, 'Can I help you, ' + message.user + '?');
 });
 
+
+// mentions when someone joins our channel in public
+/*
+controller.on('user_channel_join', function(bot, message) {
+    var userID = message.user 
+    bot.reply(message,'<@' + message.user + '> Welcome aboard!');
+});
+*/
+
+// welcome new users in public + information about our community
+/*
+controller.on('user_channel_join', function(bot, message) {
+var userID = message.user
+  // start a conversation to handle this response.
+  bot.startConversation(message,function(err,convo) {
+
+    convo.say('Hello!');
+    convo.say('<@' + message.user + '> Welcome aboard!');
+
+  });
+});
+*/
+
+// DM new users + information about our community
+//controller.on('user_channel_join', function(bot, message) {
+//var userID = message.user;
+//var channel = "#general";
+  // start a conversation to handle this response.
+  //bot.startPrivateConversation(message,function(err,convo) {
+
+    //convo.say('Welcome to our UX community!');
+    //convo.say('Use <#C3AFEP19U> to check new members.');
+
+  //});
+//});
 
 
 var greet = "_Hello There_ :tada:! I am your Slackbot :octocat: , and Welcome to GSIUXD - Get Started in UX Design.\n\n\n:rocket: This design community has mentors, learners, designers, and engineers and everyone in between. The primary goal of this UX group is to help each other learn and level up our collective design skills.\n\n\n:rocket: _Give your short intro_ in #member_introductions that will help us to know about you, where you work, and what are your expectations from this community.\n\n\n:rocket: _About our channels_\n<#C0L8M4D0V> - Common talk\n<#C0LLFQD4Y> - Post design jobs, or discuss anything that relates to your career\n<#C0M2W80J1> - Online and offline UX related events\n<#C0LLE7JL9> - Ask a question that doesn't fit in any of our other channels\n<#C0LLE9J9X> - Share interesting stuff like design articles\n<#C0LLQ26NA> - Design tools and resources\n<#C0R43MBGS> - Get feedback for your designs\n<#C4K141RLY> - UX books you have read, wish to read, and discussions\n<#C4NCLSRTJ> - Best practices on user research\n<#C4PNLBJJG> - Discuss everything about visual design\n<#C4PNLMNTW> - Level up your design game\n<#C4PNLK4KW> - Sketches, wireframes, prototypes\n<#C4QCEMMF1> - Discuss how to test the products you build with users"
