@@ -9,15 +9,16 @@
 'use strict'
 
 var Botkit = require('./lib/Botkit.js');
-var BeepBoop = require('./lib/beepboop-botkit') // support for beepboop
-var BotkitStorageBeepBoop = require('botkit-storage-beepboop') // beepboop storage
+var BeepBoop = require('beepboop');
+var BeepBoopBotkit = require('./lib/beepboop-botkit'); // support for beepboop
+var BotkitStorageBeepBoop = require('botkit-storage-beepboop'); // beepboop storage
 
 var PORT = process.env.PORT || 8080 // beepboop's default to 8080 for local dev
 
 
 var VERIFY_TOKEN = process.env.SLACK_VERIFY_TOKEN // multi-team verify token
 
-var controller = botkit.slackbot({
+var controller = Botkit.slackbot({
   storage: BotkitStorageBeepBoop()
 })
 require('beepboop-botkit').start(controller, { debug: true })
